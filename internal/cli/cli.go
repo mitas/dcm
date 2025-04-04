@@ -56,7 +56,7 @@ func (c *CLI) Run(cfg *config.Config) error {
 				fmt.Println(c.formatter.FormatProjectNotFound(cfg.TargetProject))
 				return nil
 			}
-			
+
 			fmt.Println(c.formatter.FormatActionStart("Starting", project.Name))
 			result := c.manager.StartProject(project)
 			fmt.Println(c.formatter.FormatActionResult(result))
@@ -76,7 +76,7 @@ func (c *CLI) Run(cfg *config.Config) error {
 				fmt.Println(c.formatter.FormatProjectNotFound(cfg.TargetProject))
 				return nil
 			}
-			
+
 			fmt.Println(c.formatter.FormatActionStart("Stopping", project.Name))
 			result := c.manager.StopProject(project)
 			fmt.Println(c.formatter.FormatActionResult(result))
@@ -101,7 +101,7 @@ func (c *CLI) Run(cfg *config.Config) error {
 				fmt.Println(c.formatter.FormatProjectNotFound(cfg.TargetProject))
 				return nil
 			}
-			
+
 			fmt.Println(c.formatter.FormatActionStart("Checking status of", project.Name))
 			isRunning, services, err := c.manager.CheckProjectStatus(project)
 			if err != nil {

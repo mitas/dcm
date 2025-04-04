@@ -14,7 +14,7 @@ import (
 func newListManagedCmd(projectManager *manager.Manager, outputFormatter *formatter.Formatter) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list-managed",
-		Aliases: []string{"lsm"},
+		Aliases: []string{"lsm", "lm"},
 		Short:   "List all managed docker-compose projects",
 		Long:    `List all docker-compose projects that have been saved to the config file.`,
 		RunE: func(cmd *cobra.Command, args []string) error {

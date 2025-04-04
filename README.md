@@ -13,9 +13,32 @@ DCM is a command-line utility for managing multiple Docker Compose projects acro
 
 ## Installation
 
+### Using Go
+
+```bash
+# Install directly using Go
+go install github.com/mitas/dcm/cmd/dcm@latest
+```
+
+### From Source
+
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/dcm.git
+git clone https://github.com/mitas/dcm.git
+cd dcm
+
+# Build using Makefile
+make build
+
+# Optional: Install to your $GOPATH/bin
+make install
+```
+
+### Manual Build
+
+```bash
+# Clone the repository
+git clone https://github.com/mitas/dcm.git
 cd dcm
 
 # Build the application
@@ -38,8 +61,21 @@ Note: When using managed projects, the `--path` flag is not required.
 
 ### List Docker Compose Projects
 
+List all Docker Compose projects in a directory:
+
 ```bash
 dcm --path /path/to/projects list
+```
+
+Example output:
+```
+📋 Found 17 Docker Compose projects:
+📁 1. project-a (/path/to/projects/project-a/docker-compose.yml)
+📁 2. project-b (/path/to/projects/project-b/docker-compose.yml)
+📁 3. project-c (/path/to/projects/project-c/docker-compose.yml)
+📁 4. project-d (/path/to/projects/sub/project-d/docker-compose.yml)
+📁 5. project-e (/path/to/projects/sub/project-e/docker-compose.yml)
+...
 ```
 
 ### Start Projects
@@ -52,6 +88,12 @@ dcm --path /path/to/projects start --project myproject
 
 # Or using positional argument
 dcm --path /path/to/projects start myproject
+```
+
+Example output:
+```
+🔄 Starting Docker Compose project: myproject
+✅ Successfully started myproject
 ```
 
 Start all projects:
@@ -72,6 +114,12 @@ dcm --path /path/to/projects stop --project myproject
 dcm --path /path/to/projects stop myproject
 ```
 
+Example output:
+```
+🔄 Stopping Docker Compose project: myproject
+✅ Successfully stopped myproject
+```
+
 Stop all projects:
 
 ```bash
@@ -88,6 +136,17 @@ dcm --path /path/to/projects status --project myproject
 
 # Or using positional argument
 dcm --path /path/to/projects status myproject
+```
+
+Example output:
+```
+🔄 Checking status of Docker Compose project: myproject
+
+=== Status of myproject (/path/to/projects/myproject) ===
+🟢 myproject_redis: running (Up 7 seconds)
+🟢 myproject_db: running (Up 7 seconds)
+🟢 myproject_api: running (Up 7 seconds)
+🟢 myproject_web: running (Up 7 seconds)
 ```
 
 Check status of all projects:
@@ -108,11 +167,31 @@ dcm --path /path/to/projects add-managed myproject
 dcm --path /path/to/projects add-managed myproject --alias prod-api
 ```
 
+Example output:
+```
+✅ Project 'myproject' added to managed projects with alias 'prod-api'
+```
+
 #### List Managed Projects
 
 ```bash
+# Using the full command
 dcm list-managed
+
+# Using aliases
+dcm lsm
+dcm lm
 ```
+
+Example output:
+```
+📋 Managed Projects:
+📌 1. project-a (alias) -> project-a (/path/to/projects/project-a)
+📌 2. api (alias) -> myproject (/path/to/projects/myproject)
+📌 3. prod-api (alias) -> myproject (/path/to/projects/myproject)
+```
+
+> Note: Each Docker Compose file path can only be added once to managed projects.
 
 #### Use Managed Projects
 
@@ -120,44 +199,119 @@ Once projects are managed, you can start, stop, and check their status without s
 
 ```bash
 # Start a managed project
-dcm start my-alias
+dcm start prod-api
+```
 
-# Stop a managed project
-dcm stop my-alias
+Example output:
+```
+🔄 Starting managed Docker Compose project: prod-api
+✅ Successfully started myproject
+```
 
+```bash
 # Check status of a managed project
-dcm status my-alias
+dcm status prod-api
+```
+
+Example output:
+```
+🔄 Checking status of managed Docker Compose project: prod-api
+
+=== Status of myproject (/path/to/projects/myproject) ===
+🟢 myproject_redis: running (Up 5 seconds)
+🟢 myproject_db: running (Up 5 seconds)
+🟢 myproject_api: running (Up 5 seconds)
+🟢 myproject_web: running (Up 5 seconds)
+```
+
+```bash
+# Stop a managed project
+dcm stop prod-api
+```
+
+Example output:
+```
+🔄 Stopping managed Docker Compose project: prod-api
+✅ Successfully stopped myproject
 ```
 
 #### Remove a Managed Project
 
 ```bash
-dcm remove-managed my-alias
+dcm remove-managed prod-api
 ```
 
-## Examples
+Example output:
+```
+✅ Project with alias 'prod-api' removed from managed projects
+```
+
+## Complete Example Workflow
+
+First, list all projects in your development directory:
+```bash
+dcm --path ~/dev list
+```
+
+Start a specific project:
+```bash
+dcm --path ~/dev start myproject
+```
+
+Check the status:
+```bash
+dcm --path ~/dev status myproject
+```
+
+Add the project to managed projects with an alias:
+```bash
+dcm --path ~/dev add-managed myproject --alias api
+```
+
+List managed projects:
+```bash
+dcm list-managed
+```
+
+Use the managed project (no path needed):
+```bash
+dcm start api
+dcm status api
+dcm stop api
+```
+
+Remove from managed projects when no longer needed:
+```bash
+dcm remove-managed api
+```
+
+## Build and Development
+
+### Makefile Commands
+
+The project includes a Makefile with the following commands:
 
 ```bash
-# Find all Docker Compose projects in your development directory
-dcm --path ~/dev list
+# Build the binary
+make build
 
-# Start a specific project
-dcm --path ~/dev start myapi
+# Format, lint, and build the code
+make all
 
-# Stop all projects
-dcm --path ~/dev stop --all
+# Run tests
+make test
 
-# Check the status of all projects
-dcm --path ~/dev status --all
+# Format the code
+make fmt
 
-# Add a project to managed projects
-dcm --path ~/dev add-managed myapi --alias api
+# Run linter
+make lint
 
-# Start a managed project (no path needed)
-dcm start api
+# Build for multiple platforms (Linux, macOS, Windows)
+make release
 
-# List all managed projects
-dcm list-managed
+# Show all available commands
+make help
 ```
 
 ## Project Structure
@@ -169,7 +323,9 @@ dcm/
 ├── cmd/
 │   └── dcm/              # Application entry point
 ├── internal/
+│   ├── cli/              # CLI interface
 │   ├── cmd/              # Command implementations
+│   ├── config/           # Configuration handling
 │   ├── manager/          # Business logic
 │   └── model/            # Data structures
 └── pkg/

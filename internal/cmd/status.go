@@ -75,8 +75,8 @@ func newStatusCmd(projectManager *manager.Manager, outputFormatter *formatter.Fo
 				for _, project := range projects {
 					isRunning, services, err := projectManager.CheckProjectStatus(project)
 					if err != nil {
-						fmt.Printf("%s❌ Error checking status of %s: %v%s\n", 
-						    formatter.ColorRed, project.Name, err, formatter.ColorReset)
+						fmt.Printf("%s❌ Error checking status of %s: %v%s\n",
+							formatter.ColorRed, project.Name, err, formatter.ColorReset)
 						continue
 					}
 					fmt.Println(outputFormatter.FormatProjectStatus(project.Name, project.Path, isRunning, services))

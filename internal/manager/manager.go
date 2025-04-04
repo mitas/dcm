@@ -227,7 +227,12 @@ func (m *Manager) AddManagedProject(managedConfig *config.ManagedConfig, project
 	// Check if alias already exists
 	for _, p := range managedConfig.Projects {
 		if p.Alias == alias {
-			return fmt.Errorf("a project with alias '%s' already exists", alias)
+			return fmt.Errorf("❌ Project with alias '%s' already exists in managed projects", alias)
+		}
+
+		// Check if the project path already exists
+		if p.Project.Path == project.Path {
+			return fmt.Errorf("❌ Project at path '%s' already exists in managed projects with alias '%s'", project.Path, p.Alias)
 		}
 	}
 

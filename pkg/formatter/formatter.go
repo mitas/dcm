@@ -105,7 +105,7 @@ func (f *Formatter) FormatManagedProjectsList(projects []model.ManagedProject) s
 
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("%s📋 Managed Projects:%s\n", ColorBold, ColorReset))
-	
+
 	for i, p := range projects {
 		sb.WriteString(fmt.Sprintf("%s📌 %d.%s %s%s%s (alias) -> %s%s%s (%s)\n",
 			ColorBlue, i+1, ColorReset,

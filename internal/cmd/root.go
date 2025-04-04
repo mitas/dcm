@@ -34,7 +34,7 @@ projects in a given directory.`,
 	rootCmd.AddCommand(newStartCmd(projectManager, outputFormatter))
 	rootCmd.AddCommand(newStopCmd(projectManager, outputFormatter))
 	rootCmd.AddCommand(newStatusCmd(projectManager, outputFormatter))
-	
+
 	// Add managed project commands
 	rootCmd.AddCommand(newListManagedCmd(projectManager, outputFormatter))
 	rootCmd.AddCommand(newAddManagedCmd(projectManager, outputFormatter))
